@@ -15,13 +15,14 @@ local Ball = require 'classes.Ball'
 local Paddle = require 'classes.Paddle'
 local Bricks = require 'classes.Bricks'
 local Walls = require 'classes.Walls'
---local collisions = require 'collisions'
+local Collisions = require 'classes.Collisions'
 
 -- Important variables
 local ball = nil
 local paddle = nil
 local bricks = nil
 local walls = nil
+local collisions = nil
 
 function love.load()
     img = love.graphics.newImage("../img/sky_grass.jpg")
@@ -39,13 +40,17 @@ function gameLevel1:enter()
 
   walls = Walls()
   walls:build()
+
+  collisions = Collisions(ball, paddle, bricks, walls)
 end
 
 function gameLevel1:update(dt)
   ball:update(dt)
   paddle:update(dt)
   bricks:update(dt)
-  --collisions.treat(ball, paddle, bricks, walls)
+  collisions:treat(ball, paddle, bricks, walls)
+  --collisions:ball_paddle(ball, paddle)
+
 end
 
 function gameLevel1:draw()

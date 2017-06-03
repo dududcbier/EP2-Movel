@@ -16,6 +16,10 @@ function Wall:init(pos_x, pos_y, width, height)
    self.height = height 
 end
 
+function Wall:get_rect(wall)
+   return { x = wall.pos_x, y = wall.pos_y, width = wall.width, height = wall.height } 
+end
+
 function Wall:draw_wall(wall)
    love.graphics.rectangle('fill', wall.pos_x, wall.pos_y, wall.width, wall.height)
 end

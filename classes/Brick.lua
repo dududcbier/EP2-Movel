@@ -17,6 +17,10 @@ function Brick:init(x, y, width, height, btype)
    self.btype = btype
 end
 
+function Brick:get_rect(brick)
+   return { x = brick.pos_x, y = brick.pos_y, width = brick.width, height = brick.height }
+end
+
 function Brick:update_brick(b)
   --  bricks.total = #bricks.current_bricks
    

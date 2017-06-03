@@ -23,6 +23,12 @@ function Ball:set_position(pos_x, pos_y)
    self.pos_y = pos_y
 end
 
+function Ball:get_info(ball)
+   local diameter = 2 * ball.radius
+   return { x = ball.pos_x - ball.radius, y = ball.pos_y - ball.radius, width = diameter, height = diameter }
+end
+
+
 function Ball:turn_back(horizontal_shift, vertical_shift)
    
    local min = math.min(math.abs(horizontal_shift), math.abs(vertical_shift))
