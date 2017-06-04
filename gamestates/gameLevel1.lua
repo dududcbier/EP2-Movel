@@ -1,5 +1,4 @@
 -- Import our libraries.
---bump = require 'libs.bump.bump'
 Gamestate = require 'libs.hump.gamestate'
 Class = require 'libs.hump.class'
 
@@ -10,7 +9,7 @@ local height = love.graphics.getHeight()
 -- Create our Gamestate
 local gameLevel1 = Gamestate.new()
 
--- Import the Entities
+-- Import the Classes
 local Ball = require 'classes.Ball'
 local Paddle = require 'classes.Paddle'
 local Bricks = require 'classes.Bricks'
@@ -49,8 +48,6 @@ function gameLevel1:update(dt)
   paddle:update(dt)
   bricks:update(dt)
   collisions:treat(ball, paddle, bricks, walls)
-  --collisions:ball_paddle(ball, paddle)
-
 end
 
 function gameLevel1:draw()

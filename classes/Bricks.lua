@@ -4,24 +4,25 @@
 
 local Class = require 'libs.hump.class'
 local Brick = require 'classes.Brick'
+local Level = require 'classes.Level'
 
-local width = love.graphics.getWidth()
-local height = love.graphics.getHeight()
+local screen_width = love.graphics.getWidth()
+local screen_height = love.graphics.getHeight()
 
 local Bricks = Class{
-   __includes = Brick
+   __includes = Brick,
+   __includes = Level
 }
 
-local value = 300
+level = Level(1)
+
 function Bricks:init(x, y, width, height, dist_x, dist_y)
    ---------------------------------
 -- IMPORTANT: Fix rows, columns and
 --also the levels
  ---------------------------------
-   --self.rows = levels.number
-   self.rows = 1
-   self.columns = 13
-   --self.columns = ((width - 100) / 60) --Brick width + dist_x = 60, pos_x to left and to the right = 50+50 = 100
+   self.rows = level.number
+   self.columns = ((screen_width - 100) / 60) --Brick width + dist_x = 60, pos_x to left and to the right = 50+50 = 100
    self.total = self.rows * self.columns
    self.top_left_pos_x = x
    self.top_left_pos_y = y
@@ -49,6 +50,7 @@ end
 function Bricks:hit_by_ball(i, brick, horizontal_shift, vertical_shift)
    
    table.remove(self.current_bricks, i)
+   level:update_score(1)
    -- if bricks.check_if_easy(brick) then
    --    table.remove(bricks.current_bricks, i)
    -- elseif bricks.check_if_medium(brick) then
