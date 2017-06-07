@@ -34,7 +34,7 @@ function gameLevel1:enter()
   ball = Ball(300, 300, 10, 300, 300)
   paddle = Paddle(width - width/2, height - height/10, 70, 20, 320)
   
-  bricks = Bricks(50, 50, 50, 30, 10, 15)
+  bricks = Bricks(width/18, height/10, width/18, height/16, 10, 15)
   bricks:build()
 
   walls = Walls()
