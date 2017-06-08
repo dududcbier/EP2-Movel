@@ -9,11 +9,12 @@ local height = love.graphics.getHeight()
 
 local Collisions = Class{}
 
-function Collisions:init(ball, paddle, bricks, walls)
+function Collisions:init(ball, paddle, bricks, walls, score)
    self.ball = ball
    self.paddle = paddle
    self.bricks = bricks
-   self.walls = walls 
+   self.walls = walls
+   self.score = score
 end
 
 
@@ -76,7 +77,10 @@ function Collisions:ball_paddle(ball, paddle)
    
    if overlap then
       ball:turn_back(horizontal_shift, vertical_shift)
+      src1 = love.audio.newSource("music/mechanical-clonk.wav", "static")
+      src1:play()
    end
+
 end
 
 function Collisions:ball_walls(ball, walls)
@@ -91,6 +95,8 @@ function Collisions:ball_walls(ball, walls)
       
       if overlap then
 	      ball:turn_back(horizontal_shift, vertical_shift)
+         src2 = love.audio.newSource("music/ball_walls_hit.wav", "static")
+         src2:play()
       end
    end
 end
@@ -105,7 +111,12 @@ function Collisions:ball_bricks(ball, bricks)
       
       overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, br, b)
       
-      if overlap then	 
+      if overlap then
+         if brick.btype == 2 then
+            score:update(5)
+         else
+            score:update(1)
+         end
 	      ball:turn_back(horizontal_shift, vertical_shift)
 	      bricks:hit_by_ball(i, brick, horizontal_shift, vertical_shift)
       end

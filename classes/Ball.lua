@@ -15,12 +15,18 @@ function Ball:init(x, y, radius, speed_x, speed_y)
    self.radius = radius
    self.speed_x = speed_x
    self.speed_y = speed_y
+   self.highscore = 0
+   self.score = 0
 end
 
 
 function Ball:set_position(pos_x, pos_y)
    self.pos_x = pos_x
    self.pos_y = pos_y
+end
+
+function Ball:get_position(ball)
+   return { x = ball.pos_x, y = ball.pos_y }
 end
 
 function Ball:get_info(ball)

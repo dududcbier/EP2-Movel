@@ -15,12 +15,10 @@ local Bricks = Class{
 }
 
 level = Level(1)
+rgb = { "red", "green", "blue" }
 
 function Bricks:init(x, y, width, height, dist_x, dist_y)
-   ---------------------------------
--- IMPORTANT: Fix rows, columns and
---also the levels
- ---------------------------------
+
    self.rows = level.number
    self.columns = ((screen_width - 100) / 60) --Brick width + dist_x = 60, pos_x to left and to the right = 50+50 = 100
    self.total = self.rows * self.columns
@@ -34,33 +32,31 @@ function Bricks:init(x, y, width, height, dist_x, dist_y)
 end
 
 function Bricks:build()
-   
    for i = 1, self.rows do
       for j = 1, self.columns do
 	      local horizontal_pos = self.top_left_pos_x + (j - 1) * (self.width + self.dist_x)
-		    local vertical_pos = self.top_left_pos_y + (i - 1) * (self.height + self.dist_y)
+		   local vertical_pos = self.top_left_pos_y + (i - 1) * (self.height + self.dist_y)
 
-        local number = math.random(1, 3)
-		    local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, number)
-		    table.insert(self.current_bricks, brick)
+         local color = math.random(1, 3)
+         local btype = math.random(1, 2)
+		   local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
+		   table.insert(self.current_bricks, brick)
       end      
    end
 end
 
 function Bricks:hit_by_ball(i, brick, horizontal_shift, vertical_shift)
    
-   table.remove(self.current_bricks, i)
-   level:update_score(1)
-   -- if bricks.check_if_easy(brick) then
-   --    table.remove(bricks.current_bricks, i)
-   -- elseif bricks.check_if_medium(brick) then
-   --    bricks.medium_to_easy(brick)
-   -- else
-   --    bricks.hard_to_medium(brick)
-   -- end
+   --table.remove(self.current_bricks, i)
+   --level:update_score(1)
+
+   if brick.btype == 1 then
+      table.remove(self.current_bricks, i)
+   elseif brick.btype == 2 then
+      Brick:medium_to_cracked(brick)
+   end
 
 end
-
 
 function Bricks:update(dt)
    for _, brick in pairs(self.current_bricks) do

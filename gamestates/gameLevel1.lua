@@ -1,5 +1,5 @@
 -- Import our libraries.
-Gamestate = require 'libs.hump.gamestate'
+--Gamestate = require 'libs.hump.gamestate'
 Class = require 'libs.hump.class'
 
 --Get window width and height
@@ -16,21 +16,19 @@ local Bricks = require 'classes.Bricks'
 local Walls = require 'classes.Walls'
 local Collisions = require 'classes.Collisions'
 
+local Level = require 'classes.Level'
+
 -- Important variables
 local ball = nil
 local paddle = nil
 local bricks = nil
 local walls = nil
+local score = nil
 local collisions = nil
 
-function love.load()
-    img = love.graphics.newImage("../img/sky_grass.jpg")
-    Gamestate.registerEvents()
-    --Gamestate.switch(menu)
-end
 
+function gameLevel1:enter(score_obj)
 
-function gameLevel1:enter()
   ball = Ball(300, 300, 10, 300, 300)
   paddle = Paddle(width - width/2, height - height/10, 70, 20, 320)
   
@@ -40,14 +38,30 @@ function gameLevel1:enter()
   walls = Walls()
   walls:build()
 
-  collisions = Collisions(ball, paddle, bricks, walls)
+  score = score_obj
+
+  collisions = Collisions(ball, paddle, bricks, walls, score)
 end
 
 function gameLevel1:update(dt)
-  ball:update(dt)
-  paddle:update(dt)
-  bricks:update(dt)
-  collisions:treat(ball, paddle, bricks, walls)
+
+   ball:update(dt)
+   paddle:update(dt)
+   bricks:update(dt)
+   collisions:treat(ball, paddle, bricks, walls)
+
+   if score.account > tonumber(score.highscore) then
+      score.highscore = score.account
+      love.filesystem.write("highscore.lua", "Highscore\n=\n" .. score.highscore)
+   end
+
+   local pos = ball:get_position(ball)
+   if pos.y > height + 10 then
+     gameOver = true
+     over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
+     over_song:play()
+   end
+
 end
 
 function gameLevel1:draw()
@@ -62,6 +76,9 @@ function gameLevel1:draw()
   love.graphics.setColor(0,0,139) --darkblue
   bricks:draw()
   walls:draw()
+
+  love.graphics.setColor(139,0,0) --darkblue
+  score:draw()
 end
 
 return gameLevel1
