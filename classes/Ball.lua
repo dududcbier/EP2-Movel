@@ -62,4 +62,17 @@ function Ball:draw()
    love.graphics.circle('fill', self.pos_x, self.pos_y, self.radius, segments_in_circle)   
 end
 
+function Ball:launch(speed_x, speed_y)
+   self.speed_x = speed_x
+   self.speed_y = speed_y
+end
+
+function Ball:getX()
+   return self.pos_x
+end
+
+function Ball:getY()
+   return self.pos_y
+end
+
 return Ball
