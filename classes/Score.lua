@@ -15,7 +15,6 @@ end
 
 function Score:update(points)
 	self.account = self.account + points
-	print(self.account)
 end
 
 function Score:draw()

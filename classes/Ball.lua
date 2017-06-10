@@ -52,6 +52,21 @@ function Ball:turn_back(horizontal_shift, vertical_shift)
      
 end
 
+function Ball:increase_speed_ball(ball, percentage)
+   local value = 1 + percentage
+
+   self.speed_x = self.speed_x * value
+   self.speed_y = self.speed_y * value
+end
+
+function Ball:reduce_speed_ball(ball, percentage)
+   local value = 1 - percentage
+
+   self.speed_x = self.speed_x * value
+   self.speed_y = self.speed_y * value
+end
+
+
 function Ball:update(delta_t)
    self.pos_x = self.pos_x + self.speed_x * delta_t
    self.pos_y = self.pos_y + self.speed_y * delta_t

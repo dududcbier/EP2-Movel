@@ -5,13 +5,15 @@
 local Class = require 'libs.hump.class'
 local Brick = require 'classes.Brick'
 local Level = require 'classes.Level'
+local BonusSet = require 'classes.BonusSet'
 
 local screen_width = love.graphics.getWidth()
 local screen_height = love.graphics.getHeight()
 
 local Bricks = Class{
    __includes = Brick,
-   __includes = Level
+   __includes = Level,
+   __includes = BonusSet
 }
 
 level = Level(1)
@@ -65,11 +67,22 @@ function Bricks:build()
    end
 end
 
-function Bricks:hit(i)
+
+function Bricks:hit_by_ball(i, brick, bonus_set)
+
    local brick = self.current_bricks[i]
    brick:hit()
    if brick:isDestroyed() then
       table.remove(self.current_bricks, i)
+   
+      --The numbes 1 to 5 represents respectively:
+      --{"increase_size_paddle", "reduce_size_paddle", "increase_speed_ball", "reduce_speed_ball", "more_balls"}
+      bonustype = math.random(1, 4)
+
+      bonus_set:generate_bonus(15, brick.pos_x, brick.pos_y, 0, 150, bonustype)
+
+   elseif brick.btype == 2 then
+      Brick:medium_to_cracked(brick)
    end
 end
 

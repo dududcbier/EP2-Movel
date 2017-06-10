@@ -7,7 +7,7 @@ local width = love.graphics.getWidth()
 local height = love.graphics.getHeight()
 
 -- Create our Gamestate
-local gameLevel1 = Gamestate.new()
+local gameLevel = Gamestate.new()
 
 -- Import the Classes
 local Ball = require 'classes.Ball'
@@ -15,6 +15,7 @@ local Paddle = require 'classes.Paddle'
 local Bricks = require 'classes.Bricks'
 local Walls = require 'classes.Walls'
 local Collisions = require 'classes.Collisions'
+local BonusSet = require 'classes.BonusSet'
 
 local Level = require 'classes.Level'
 
@@ -23,8 +24,9 @@ local ball = nil
 local paddle = nil
 local bricks = nil
 local walls = nil
-local score = nil
 local collisions = nil
+local bonus_set = nil
+local score = nil
 
 local launched
 
@@ -32,11 +34,15 @@ local DEFAULT_PADDLE_WIDTH = 70
 local DEFAULT_BALL_RADIUS = 10
 
 
-function gameLevel1:enter(score_obj)
+function gameLevel:enter(score_obj)
+  
+  self.gameOver = false
 
   ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
   paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
   
+  bonus_set = BonusSet()
+
   bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8)
   bricks:build()
 
@@ -49,12 +55,14 @@ function gameLevel1:enter(score_obj)
   launched = false
 end
 
-function gameLevel1:update(dt)
+
+function gameLevel:update(dt)
     if launched then
       ball:update(dt)
       paddle:update(dt)
       bricks:update(dt)
-      collisions:treat(ball, paddle, bricks, walls)
+      bonus_set:update(dt)
+      collisions:treat(ball, paddle, bricks, walls, bonus_set)
     end
 
     if score.account > tonumber(score.highscore) then
@@ -64,15 +72,16 @@ function gameLevel1:update(dt)
 
     local pos = ball:get_position(ball)
     if pos.y > height + 10 then
-      gameOver = true
+      self.gameOver = true
       over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
       over_song:play()
       score:reset()
-      gameLevel1:enter(score)
+      gameLevel:enter(score)
     end
 end
 
-function gameLevel1:mousepressed(x, y)
+
+function gameLevel:mousepressed(x, y)
   if launched then
     paddle:mousepressed(x)
   else
@@ -90,7 +99,7 @@ function gameLevel1:mousepressed(x, y)
 end
 
 
-function gameLevel1:draw()
+function gameLevel:draw()
   
   love.graphics.setColor(255, 255, 255)
   love.graphics.setBackgroundColor(22, 22, 22)
@@ -105,6 +114,10 @@ function gameLevel1:draw()
   walls:draw()
 
   score:draw()
+
+  --love.graphics.setColor(139,0,0) Put the correct color according with bonustype
+   bonus_set:draw()
+
 end
 
-return gameLevel1
+return gameLevel
