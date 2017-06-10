@@ -25,11 +25,11 @@ function Paddle:hit_wall(horizontal_shift, vertical_shift)
    self.pos_x = self.pos_x + horizontal_shift
 end
 
-function increase_size_paddle(paddle, value)
+function Paddle:increase_size_paddle(paddle, value)
    paddle.width = paddle.width + value
 end
 
-function reduce_size_paddle(paddle, value)
+function Paddle:reduce_size_paddle(paddle, value)
    paddle.width = paddle.width - value
 end
 

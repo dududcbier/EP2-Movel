@@ -53,8 +53,8 @@ function Bricks:hit_by_ball(i, brick, bonus_set)
       table.remove(self.current_bricks, i)
 
       --The numbes 1 to 5 represents respectively:
-      --{"increase_size_paddle", "reduce_size_paddle", "more_balls", "increase_speed_ball", "reduce_speed_ball"}
-      bonustype = math.random(1, 5)
+      --{"increase_size_paddle", "reduce_size_paddle", "increase_speed_ball", "reduce_speed_ball", "more_balls"}
+      bonustype = math.random(1, 4)
 
       bonus_set:generate_bonus(15, brick.pos_x, brick.pos_y, 0, 150, bonustype)
 

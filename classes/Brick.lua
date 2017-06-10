@@ -16,7 +16,6 @@ function Brick:init(x, y, width, height, btype, color)
    self.height = height
    self.btype = btype
    self.color = color
-   self.image = love.graphics.newImage("img/brick.png")
    self.tileset_width = 384
    self.tileset_height = 160
 end
@@ -71,9 +70,5 @@ function Brick:medium_to_cracked(brick)
    brick.btype = 1
 end
 
--- function Brick:hard_to_medium(brick)
---    brick.btype = 2
---    --bricks.redraw(brick)
--- end
 
 return Brick

@@ -34,23 +34,21 @@ function Bonus:draw_bonus(bonus)
 end
 
 function Bonus:get_info(bonus)
-   print("On get info")
    local diameter = 2 * bonus.radius
    return { x = bonus.pos_x - bonus.radius, y = bonus.pos_y - bonus.radius, width = diameter, height = diameter }
 end
 
 
 function Bonus:apply_effect(ball, paddle, bonus)
-   print("On apply_effect function")
    if bonus.bonustype == "increase_size_paddle" then
-      paddle:increase_size_paddle(paddle, 5)
+      paddle:increase_size_paddle(paddle, 10)
    elseif bonus.bonustype == "reduce_size_paddle" then
-      paddle:reduce_size_paddle(paddle, 5)
-   -- elseif bonus.bonustype == "more_balls" then
+      paddle:reduce_size_paddle(paddle, 10)
    elseif bonus.bonustype == "increase_speed_ball" then
-      ball:increase_speed_ball(ball, 5)
+      ball:increase_speed_ball(ball, 0.1)
    elseif bonus.bonustype == "reduce_speed_ball" then
-      ball:reduce_speed_ball(ball, 5)
+      ball:reduce_speed_ball(ball, 0.1)
+   -- elseif bonus.bonustype == "more_balls" then
    end
     
 end

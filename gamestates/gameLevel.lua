@@ -90,7 +90,6 @@ function gameLevel:draw()
   score:draw()
 
   --love.graphics.setColor(139,0,0) Put the correct color according with bonustype
-   
    bonus_set:draw()
 
 end

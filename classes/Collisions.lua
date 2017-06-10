@@ -145,14 +145,14 @@ function Collisions:bonus_paddle(bonus_set, paddle, ball)
    local p = paddle:get_rect(paddle)
 
    for i, bonus in pairs(bonus_set.current_bonus) do
-      --local b = bonus:get_info(bonus)
-      local diameter = 2 * bonus.radius
-      local b = { x = bonus.pos_x - bonus.radius, y = bonus.pos_y - bonus.radius, width = diameter, height = diameter }
+      local b = bonus:get_info(bonus)
+      --local diameter = 2 * bonus.radius
+      --local b = { x = bonus.pos_x - bonus.radius, y = bonus.pos_y - bonus.radius, width = diameter, height = diameter }
 
       overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, p, b)
 
       if overlap then
-         --bonus:apply_effect(ball, paddle, bonus)
+         bonus:apply_effect(ball, paddle, bonus)
          bonus_set:remove(i)
       end
    end
