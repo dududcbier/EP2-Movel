@@ -22,7 +22,15 @@ function Paddle:get_rect(paddle)
 end
 
 function Paddle:hit_wall(horizontal_shift, vertical_shift)
-  self.pos_x = self.pos_x + horizontal_shift
+   self.pos_x = self.pos_x + horizontal_shift
+end
+
+function increase_size_paddle(paddle, value)
+   paddle.width = paddle.width + value
+end
+
+function reduce_size_paddle(paddle, value)
+   paddle.width = paddle.width - value
 end
 
 function Paddle:update(delta_t)
