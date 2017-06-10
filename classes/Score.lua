@@ -20,7 +20,7 @@ end
 
 function Score:draw()
    local width = love.graphics.getWidth()
-   love.graphics.setColor(255, 0, 0)
+   love.graphics.setColor(255, 255, 255)
    love.graphics.printf("Score: " .. tostring(self.account), self.pos_x, self.pos_y, width, 'center')
 
    love.graphics.printf("HighScore: " .. tostring(self.highscore), self.pos_x + 10, self.pos_y, width, 'left')

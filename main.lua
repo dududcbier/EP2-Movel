@@ -21,7 +21,6 @@ function love.load()
 
 	highscore = {}
 	score = Score(20, 20, 0)
-   img = love.graphics.newImage("img/sky_grass.jpg")
    
    if not love.filesystem.exists("highscore.lua") then
       love.filesystem.newFile("highscore.lua")
@@ -55,6 +54,10 @@ function love.keypressed(key)
    if key == "escape" then
       love.event.push("quit")
    end
+end
+
+function love.mousepressed(x, y, button, istouch)
+   gameLevel1:mousepressed(x,y)
 end
 
 function love.quit()

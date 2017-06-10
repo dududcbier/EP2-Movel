@@ -26,7 +26,7 @@ function Brick:get_rect(brick)
    return { x = brick.pos_x, y = brick.pos_y, width = brick.width, height = brick.height }
 end
 
-function Brick:update_brick(b)
+function Brick:update(b)
   --  bricks.total = #bricks.current_bricks
    
   --  if bricks.total == 0 then
@@ -36,42 +36,43 @@ function Brick:update_brick(b)
   -- end
 end
 
-function Brick:draw_brick(brick)
+function Brick:draw()
 
-   if brick.color == "red" then
-      love.graphics.setColor(255, 0, 0)
-   elseif brick.color == "green" then
-      love.graphics.setColor(0, 255, 0)
-   else
-      love.graphics.setColor(0, 0, 255)
-   end
+    love.graphics.setColor(self.color)
 
-   if (brick.btype == 1) then
-      love.graphics.rectangle("line", brick.pos_x, brick.pos_y, brick.width, brick.height)
-   elseif (brick.btype == 2) then
-      love.graphics.rectangle("fill", brick.pos_x, brick.pos_y, brick.width, brick.height)
-   end
+    if (self.btype == 1) then
+      love.graphics.rectangle("line", self.pos_x, self.pos_y, self.width, self.height)
+    elseif (self.btype == 2) then
+      love.graphics.rectangle("fill", self.pos_x, self.pos_y, self.width, self.height)
+    end
 
    love.graphics.setColor(0, 0, 255)
-
 end
 
-function Brick:check_if_easy(brick)
-   return brick.btype == 1
+function Brick:hit()
+  self.btype = self.btype - 1
 end
 
-function Brick:check_if_medium(brick)
-   return brick.btype == 2
+function Brick:isDestroyed()
+  return self.btype == 0
 end
 
-function Brick:check_if_cracked(brick)
-   return brick.btype == -2
-end
+-- function Brick:check_if_easy(brick)
+--    return brick.btype == 1
+-- end
 
-function Brick:medium_to_cracked(brick)
-   brick.btype = 1
-   --brick.quad = self.bricktype_to_quad(self, brick.btype)
-end
+-- function Brick:check_if_medium(brick)
+--    return brick.btype == 2
+-- end
+
+-- function Brick:check_if_cracked(brick)
+--    return brick.btype == -2
+-- end
+
+-- function Brick:medium_to_cracked(brick)
+--    brick.btype = 1
+--    --brick.quad = self.bricktype_to_quad(self, brick.btype)
+-- end
 
 -- function Brick:hard_to_medium(brick)
 --    brick.btype = 2

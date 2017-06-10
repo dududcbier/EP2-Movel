@@ -15,12 +15,32 @@ local Bricks = Class{
 }
 
 level = Level(1)
-rgb = { "red", "green", "blue" }
+rgb = { -- http://paletton.com/#uid=7390u0ksRLGeIXqlSS7CRuOyiiE minus the darker colors
+   {21, 213, 160, 255}, 
+   {133, 245, 214, 255}, 
+   {73, 231, 187, 255}, 
+   {0, 161, 116, 255}, 
+
+   {37, 117, 213, 255}, 
+   {142, 189, 245, 255}, 
+   {86, 152, 231, 255}, 
+   {10, 79, 161, 255}, 
+
+   {255, 166, 25, 255}, 
+   {255, 210, 138, 255}, 
+   {255, 187, 81, 255}, 
+   {245, 150,  0, 255}, 
+
+   {255, 108, 25, 255}, 
+   {255, 180, 138, 255}, 
+   {255, 144, 81, 255}, 
+   {245, 89,  0, 255}, 
+}
 
 function Bricks:init(x, y, width, height, dist_x, dist_y)
 
-   self.rows = level.number
-   self.columns = ((screen_width - 100) / 60) --Brick width + dist_x = 60, pos_x to left and to the right = 50+50 = 100
+   self.rows = 3 + level.number
+   self.columns = ((screen_width - 40) / (width + dist_x))
    self.total = self.rows * self.columns
    self.top_left_pos_x = x
    self.top_left_pos_y = y
@@ -37,7 +57,7 @@ function Bricks:build()
 	      local horizontal_pos = self.top_left_pos_x + (j - 1) * (self.width + self.dist_x)
 		   local vertical_pos = self.top_left_pos_y + (i - 1) * (self.height + self.dist_y)
 
-         local color = math.random(1, 3)
+         local color = math.random(1, 16)
          local btype = math.random(1, 2)
 		   local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
 		   table.insert(self.current_bricks, brick)
@@ -45,28 +65,23 @@ function Bricks:build()
    end
 end
 
-function Bricks:hit_by_ball(i, brick, horizontal_shift, vertical_shift)
-   
-   --table.remove(self.current_bricks, i)
-   --level:update_score(1)
-
-   if brick.btype == 1 then
+function Bricks:hit(i)
+   local brick = self.current_bricks[i]
+   brick:hit()
+   if brick:isDestroyed() then
       table.remove(self.current_bricks, i)
-   elseif brick.btype == 2 then
-      Brick:medium_to_cracked(brick)
    end
-
 end
 
 function Bricks:update(dt)
    for _, brick in pairs(self.current_bricks) do
-      Brick:update_brick(brick)
+      brick:update()
    end
 end
 
 function Bricks:draw()
    for _, brick in pairs(self.current_bricks) do
-      Brick:draw_brick(brick)
+      brick:draw()
    end
 end
 

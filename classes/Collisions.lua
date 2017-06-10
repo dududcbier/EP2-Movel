@@ -22,7 +22,6 @@ function Collisions:treat(ball, paddle, bricks, walls)
    self.ball_paddle(self, ball, paddle)
    self.ball_bricks(self, ball, bricks)
    self.ball_walls(self, ball, walls)
-   self.paddle_walls(self, paddle, walls)
 end
 
 ----------------
@@ -66,7 +65,7 @@ end
 
 
 ------------------------------------------------
---Treats the four possible cases of collisions
+--Treats the three possible cases of collisions
 ------------------------------------------------
 function Collisions:ball_paddle(ball, paddle)
    local overlap, horizontal_shift, vertical_shift
@@ -118,23 +117,7 @@ function Collisions:ball_bricks(ball, bricks)
             score:update(1)
          end
 	      ball:turn_back(horizontal_shift, vertical_shift)
-	      bricks:hit_by_ball(i, brick, horizontal_shift, vertical_shift)
-      end
-   end
-end
-
-function Collisions:paddle_walls(paddle, walls)
-
-   local overlap, horizontal_shift, vertical_shift
-   local p = paddle:get_rect(paddle)
-   
-   for _, wall in pairs(walls.current_walls) do
-      
-      local w = wall:get_rect(wall) 
-      overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, w, p)
-      
-      if overlap then
-	      paddle:hit_wall(horizontal_shift)
+	      bricks:hit(i)
       end
    end
 end

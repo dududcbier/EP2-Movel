@@ -13,7 +13,7 @@ local Walls = Class{
 }
 
 function Walls:init()
-   self.thickness = 20
+   self.thickness = 10
    self.current_walls = {}
 end
 

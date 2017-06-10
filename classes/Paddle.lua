@@ -33,16 +33,26 @@ function Paddle:update(delta_t)
     self.pos_x = self.pos_x - (self.speed_x * delta_t)
   end
   if love.mouse.isDown("1") then
-    if (love.mouse.getX() >= width - 20 - self.width / 2) then
-      self.pos_x = width - 20 - self.width
-    else
-      self.pos_x = love.mouse.getX() - self.width / 2
-    end
+      self:move(love.mouse.getX())
   end
 end
 
 function Paddle:draw()
    love.graphics.rectangle('fill', self.pos_x, self.pos_y, self.width, self.height)
+end
+
+function Paddle:mousepressed(x)
+  self:move(x)
+end
+
+function Paddle:move(x)
+  if (x >= width - 8 - self.width / 2) then
+    self.pos_x = width - 8 - self.width
+  elseif (x <= 8 + self.width) then
+    self.pos_x = 8
+  else
+    self.pos_x = x - self.width / 2
+  end
 end
 
 return Paddle

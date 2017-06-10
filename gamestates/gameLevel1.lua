@@ -37,7 +37,7 @@ function gameLevel1:enter(score_obj)
   ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
   paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
   
-  bricks = Bricks(width/18, height/10, width/18, height/16, 10, 15)
+  bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8)
   bricks:build()
 
   walls = Walls()
@@ -57,19 +57,6 @@ function gameLevel1:update(dt)
       collisions:treat(ball, paddle, bricks, walls)
     end
 
-    if (not launched and (love.mouse.isDown("1") or love.keyboard.isDown("space"))) then
-      local delta_x = love.mouse.getX() - ball:getX()
-      local delta_y = love.mouse.getY() - ball:getY()
-      local norm = math.sqrt(delta_x * delta_x + delta_y * delta_y)
-      local speed_x = 500 * delta_x / norm
-      local speed_y = 500 * delta_y / norm
-      if speed_y > 0 then 
-        speed_y = -speed_y
-      end
-      ball:launch(speed_x, speed_y)
-      launched = true
-    end
-
     if score.account > tonumber(score.highscore) then
       score.highscore = score.account
       love.filesystem.write("highscore.lua", "Highscore\n=\n" .. score.highscore)
@@ -83,23 +70,40 @@ function gameLevel1:update(dt)
       score:reset()
       gameLevel1:enter(score)
     end
-
 end
+
+function gameLevel1:mousepressed(x, y)
+  if launched then
+    paddle:mousepressed(x)
+  else
+    local delta_x = x - ball:getX()
+    local delta_y = y - ball:getY()
+    local norm = math.sqrt(delta_x * delta_x + delta_y * delta_y)
+    local speed_x = 500 * delta_x / norm
+    local speed_y = 500 * delta_y / norm
+    if speed_y > 0 then 
+      speed_y = -speed_y
+    end
+    ball:launch(speed_x, speed_y)
+    launched = true
+  end
+end
+
 
 function gameLevel1:draw()
   
   love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(img, 0, 0)
+  love.graphics.setBackgroundColor(22, 22, 22)
+  -- love.graphics.draw(img, 0, 0)
 
   ball:draw()
-  love.graphics.setColor(0,0,0) --black
+  love.graphics.setColor(200, 200, 200) --light gray
   paddle:draw()
 
-  love.graphics.setColor(0,0,139) --darkblue
   bricks:draw()
+  love.graphics.setColor(0, 0, 0) --black
   walls:draw()
 
-  love.graphics.setColor(139,0,0) --darkblue
   score:draw()
 end
 
