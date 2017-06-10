@@ -7,7 +7,7 @@ local width = love.graphics.getWidth()
 local height = love.graphics.getHeight()
 
 -- Create our Gamestate
-local gameLevel1 = Gamestate.new()
+local gameLevel = Gamestate.new()
 
 -- Import the Classes
 local Ball = require 'classes.Ball'
@@ -15,8 +15,10 @@ local Paddle = require 'classes.Paddle'
 local Bricks = require 'classes.Bricks'
 local Walls = require 'classes.Walls'
 local Collisions = require 'classes.Collisions'
-
 local Level = require 'classes.Level'
+
+local Bonus = require 'classes.Bonus'
+local BonusSet = require 'classes.BonusSet'
 
 -- Important variables
 local ball = nil
@@ -26,13 +28,21 @@ local walls = nil
 local score = nil
 local collisions = nil
 
+local bonus = nil
+local bonus_set = nil
 
-function gameLevel1:enter(score_obj)
+
+function gameLevel:enter(score_obj)
+  
+  self.gameOver = false
 
   ball = Ball(300, 300, 10, 300, 300)
   paddle = Paddle(width - width/2, height - height/10, 70, 20, 320)
   
-  bricks = Bricks(width/18, height/10, width/18, height/16, 10, 15)
+  bonus = Bonus(14, 0, 100, 0, 100, "none")
+  bonus_set = BonusSet()
+  
+  bricks = Bricks(width/18, height/10, width/18, height/16, 10, 15, bonus)
   bricks:build()
 
   walls = Walls()
@@ -43,12 +53,15 @@ function gameLevel1:enter(score_obj)
   collisions = Collisions(ball, paddle, bricks, walls, score)
 end
 
-function gameLevel1:update(dt)
+function gameLevel:update(dt)
 
    ball:update(dt)
    paddle:update(dt)
    bricks:update(dt)
-   collisions:treat(ball, paddle, bricks, walls)
+
+   bonus_set:update(dt)
+   
+   collisions:treat(ball, paddle, bricks, walls, bonus)
 
    if score.account > tonumber(score.highscore) then
       score.highscore = score.account
@@ -57,14 +70,14 @@ function gameLevel1:update(dt)
 
    local pos = ball:get_position(ball)
    if pos.y > height + 10 then
-     gameOver = true
+     self.gameOver = true
      over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
      over_song:play()
    end
 
 end
 
-function gameLevel1:draw()
+function gameLevel:draw()
   
   love.graphics.setColor(255, 255, 255)
   love.graphics.draw(img, 0, 0)
@@ -79,6 +92,11 @@ function gameLevel1:draw()
 
   love.graphics.setColor(139,0,0) --darkblue
   score:draw()
+
+  --love.graphics.setColor(139,0,0) Put the correct color according with bonustype
+   
+   bonus_set:draw()
+
 end
 
-return gameLevel1
+return gameLevel
