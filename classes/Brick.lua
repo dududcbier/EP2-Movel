@@ -17,7 +17,6 @@ function Brick:init(x, y, width, height, btype, color)
    self.btype = btype
    self.color = color
    self.image = love.graphics.newImage("img/brick.png")
-   --self.quad = self.bricktype_to_quad(self, btype)
    self.tileset_width = 384
    self.tileset_height = 160
 end
@@ -70,7 +69,6 @@ end
 
 function Brick:medium_to_cracked(brick)
    brick.btype = 1
-   --brick.quad = self.bricktype_to_quad(self, brick.btype)
 end
 
 -- function Brick:hard_to_medium(brick)

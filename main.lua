@@ -7,8 +7,9 @@ Gamestate = require 'libs.hump.gamestate'
 
 -- Pull in each of our game states
 local menuScreen = require 'gamestates.menuScreen'
-local gameLevel1 = require 'gamestates.gameLevel1'
+local gameLevel = require 'gamestates.gameLevel'
 local pause = require 'gamestates.pauseScreen'
+local gameOver = require 'gamestates.gameOverScreen'
 
 local Score = require 'classes.Score'
 
@@ -35,20 +36,23 @@ function love.load()
    score.highscore = highscore[3]
    love.filesystem.write("highscore.lua", "highscore\n=\n" .. score.highscore)
 
-   --Gamestate.registerEvents()
-   --Gamestate.switch(gameLevel1)
-   --Gamestate.switch(menuScreen)
-   gameLevel1:enter(score)
+   gameLevel:enter(score)
 
 end
 
 
 function love.update(dt)
-	gameLevel1:update(dt)
+	if gameLevel.gameOver == false then
+	   gameLevel:update(dt)
+   end
 end
 
 function love.draw()
-	gameLevel1:draw()
+	if gameLevel.gameOver == false then
+	   gameLevel:draw()
+	else
+		gameOver:draw()
+	end
 end
 
 function love.keypressed(key)
