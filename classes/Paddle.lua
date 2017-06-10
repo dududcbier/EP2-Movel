@@ -33,7 +33,11 @@ function Paddle:update(delta_t)
     self.pos_x = self.pos_x - (self.speed_x * delta_t)
   end
   if love.mouse.isDown("1") then
-    self.pos_x = love.mouse.getX() - self.width / 2
+    if (love.mouse.getX() >= width - 20 - self.width / 2) then
+      self.pos_x = width - 20 - self.width
+    else
+      self.pos_x = love.mouse.getX() - self.width / 2
+    end
   end
 end
 

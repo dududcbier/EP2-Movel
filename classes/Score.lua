@@ -24,7 +24,10 @@ function Score:draw()
    love.graphics.printf("Score: " .. tostring(self.account), self.pos_x, self.pos_y, width, 'center')
 
    love.graphics.printf("HighScore: " .. tostring(self.highscore), self.pos_x + 10, self.pos_y, width, 'left')
-	
+end
+
+function Score:reset()
+   self.account = 0
 end
 
 return Score
