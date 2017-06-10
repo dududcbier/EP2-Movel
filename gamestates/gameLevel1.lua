@@ -26,7 +26,7 @@ local walls = nil
 local score = nil
 local collisions = nil
 
-local launched = false
+local launched
 
 local DEFAULT_PADDLE_WIDTH = 70
 local DEFAULT_BALL_RADIUS = 10
@@ -46,6 +46,7 @@ function gameLevel1:enter(score_obj)
   score = score_obj
 
   collisions = Collisions(ball, paddle, bricks, walls, score)
+  launched = false
 end
 
 function gameLevel1:update(dt)
@@ -60,8 +61,11 @@ function gameLevel1:update(dt)
       local delta_x = love.mouse.getX() - ball:getX()
       local delta_y = love.mouse.getY() - ball:getY()
       local norm = math.sqrt(delta_x * delta_x + delta_y * delta_y)
-      local speed_x = -450 * math.abs(delta_x / norm)
-      local speed_y = -450 * math.abs(delta_y / norm)
+      local speed_x = 450 * delta_x / norm
+      local speed_y = 450 * delta_y / norm
+      if speed_y > 0 then 
+        speed_y = -speed_y
+      end
       ball:launch(speed_x, speed_y)
       launched = true
     end
@@ -76,6 +80,7 @@ function gameLevel1:update(dt)
       gameOver = true
       over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
       over_song:play()
+      gameLevel1:enter(score)
     end
 
 end
