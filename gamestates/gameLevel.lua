@@ -2,7 +2,6 @@
 --Gamestate = require 'libs.hump.gamestate'
 Class = require 'libs.hump.class'
 
---Get window width and height
 local width = love.graphics.getWidth()
 local height = love.graphics.getHeight()
 
@@ -16,7 +15,6 @@ local Bricks = require 'classes.Bricks'
 local Walls = require 'classes.Walls'
 local Collisions = require 'classes.Collisions'
 local BonusSet = require 'classes.BonusSet'
-
 local Level = require 'classes.Level'
 
 -- Important variables
@@ -28,34 +26,37 @@ local collisions = nil
 local bonus_set = nil
 local score = nil
 local level = nil
-
 local launched
-
 local DEFAULT_PADDLE_WIDTH = 70
 local DEFAULT_BALL_RADIUS = 10
 
 
-function gameLevel:enter(score_obj)
-  
-  self.gameOver = false
+level = Level(width/4, 20, 1, 5)
 
-  level = Level(screen_width/2, 0, 1, 5)
-  
-  ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
-  paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
-  
+local gameLevel = Class{}
 
-  bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8, level)
-  bricks:build()
+function gameLevel:init()
+   self.gameOver = false
+end
 
-  walls = Walls()
-  walls:build()
+function gameLevel:enter(score_obj, enter_first_time)
 
-  score = score_obj
-  bonus_set = BonusSet()
+   ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
+   paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
 
-  collisions = Collisions(ball, paddle, bricks, walls, score)
-  launched = false
+   if enter_first_time then
+      bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8, level)
+      bricks:build()
+   end
+
+   walls = Walls()
+   walls:build()
+
+   score = score_obj
+   bonus_set = BonusSet()
+
+   collisions = Collisions(ball, paddle, bricks, walls, score)
+   launched = false
 end
 
 
@@ -66,6 +67,7 @@ function gameLevel:update(dt)
       bricks:update(dt)
       bonus_set:update(dt)
       collisions:treat(ball, paddle, bricks, walls, bonus_set)
+      level:update_lives(dt)
     end
 
     if score.account > tonumber(score.highscore) then
@@ -75,11 +77,16 @@ function gameLevel:update(dt)
 
     local pos = ball:get_position(ball)
     if pos.y > height + 10 then
-      self.gameOver = true
-      over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
-      over_song:play()
-      score:reset()
-      gameLevel:enter(score)
+      local enter_first_time = false
+      level:decrease_lives(1)
+      print("Lives: " .. level.lives)
+      if level.lives == 0 then
+         self.gameOver = true
+         over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
+         over_song:play()
+         score:reset()
+      end
+      gameLevel:enter(score, enter_first_time)
     end
 end
 
@@ -104,22 +111,24 @@ end
 
 function gameLevel:draw()
   
-  love.graphics.setColor(255, 255, 255)
-  love.graphics.setBackgroundColor(22, 22, 22)
-  -- love.graphics.draw(img, 0, 0)
+   love.graphics.setColor(255, 255, 255)
+   love.graphics.setBackgroundColor(22, 22, 22)
+   -- love.graphics.draw(img, 0, 0)
 
-  ball:draw()
-  love.graphics.setColor(200, 200, 200) --light gray
-  paddle:draw()
+   ball:draw()
+   love.graphics.setColor(200, 200, 200) --light gray
+   paddle:draw()
 
-  bricks:draw()
-  love.graphics.setColor(0, 0, 0) --black
-  walls:draw()
+   bricks:draw()
+   love.graphics.setColor(0, 0, 0) --black
+   walls:draw()
 
-  score:draw()
+   score:draw()
+   level:draw_lives()
 
-  --love.graphics.setColor(139,0,0) Put the correct color according with bonustype
+   --love.graphics.setColor(139,0,0) Put the correct color according with bonustype
    bonus_set:draw()
+
 
 end
 

@@ -21,14 +21,13 @@ function Level:decrease_lives(lives)
 	self.lives = self.lives - lives
 end
 
-function Level:update(dt)
+function Level:update_lives(dt)
 end
 
-function Level:draw()
+function Level:draw_lives()
    local width = love.graphics.getWidth()
    love.graphics.setColor(255, 255, 255)
    love.graphics.printf("Lives: " .. tostring(self.lives), self.pos_x, self.pos_y, width, 'center')
-
 end
 
 return Level

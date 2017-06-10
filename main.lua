@@ -7,7 +7,7 @@ Gamestate = require 'libs.hump.gamestate'
 
 -- Pull in each of our game states
 local menuScreen = require 'gamestates.menuScreen'
-local gameLevel = require 'gamestates.gameLevel'
+local GameLevel = require 'gamestates.gameLevel'
 local pause = require 'gamestates.pauseScreen'
 local gameOver = require 'gamestates.gameOverScreen'
 
@@ -21,7 +21,7 @@ local height = love.graphics.getHeight()
 function love.load()
 
 	highscore = {}
-	score = Score(20, 20, 0)
+	score = Score(width/20, 20, 0)
    
    if not love.filesystem.exists("highscore.lua") then
       love.filesystem.newFile("highscore.lua")
@@ -35,7 +35,9 @@ function love.load()
    score.highscore = highscore[3]
    love.filesystem.write("highscore.lua", "highscore\n=\n" .. score.highscore)
 
-   gameLevel:enter(score)
+   local enter_first_time = true
+   gameLevel = GameLevel()
+   gameLevel:enter(score, enter_first_time)
 
 end
 
