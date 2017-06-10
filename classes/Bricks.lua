@@ -16,7 +16,6 @@ local Bricks = Class{
    __includes = BonusSet
 }
 
-level = Level(1)
 rgb = { -- http://paletton.com/#uid=7390u0ksRLGeIXqlSS7CRuOyiiE minus the darker colors
    {21, 213, 160, 255}, 
    {133, 245, 214, 255}, 
@@ -39,8 +38,7 @@ rgb = { -- http://paletton.com/#uid=7390u0ksRLGeIXqlSS7CRuOyiiE minus the darker
    {245, 89,  0, 255}, 
 }
 
-function Bricks:init(x, y, width, height, dist_x, dist_y)
-
+function Bricks:init(x, y, width, height, dist_x, dist_y, level)
    self.rows = 3 + level.number
    self.columns = ((screen_width - 40) / (width + dist_x))
    self.total = self.rows * self.columns

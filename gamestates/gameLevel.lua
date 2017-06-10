@@ -27,6 +27,7 @@ local walls = nil
 local collisions = nil
 local bonus_set = nil
 local score = nil
+local level = nil
 
 local launched
 
@@ -38,18 +39,20 @@ function gameLevel:enter(score_obj)
   
   self.gameOver = false
 
+  level = Level(screen_width/2, 0, 1, 5)
+  
   ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
   paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
   
-  bonus_set = BonusSet()
 
-  bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8)
+  bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8, level)
   bricks:build()
 
   walls = Walls()
   walls:build()
 
   score = score_obj
+  bonus_set = BonusSet()
 
   collisions = Collisions(ball, paddle, bricks, walls, score)
   launched = false
