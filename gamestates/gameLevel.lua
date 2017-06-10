@@ -15,22 +15,19 @@ local Paddle = require 'classes.Paddle'
 local Bricks = require 'classes.Bricks'
 local Walls = require 'classes.Walls'
 local Collisions = require 'classes.Collisions'
-local Level = require 'classes.Level'
-
-local Bonus = require 'classes.Bonus'
 local BonusSet = require 'classes.BonusSet'
+
+local Level = require 'classes.Level'
 
 -- Important variables
 local ball = nil
 local paddle = nil
 local bricks = nil
 local walls = nil
-local score = nil
 local collisions = nil
-
-local bonus = nil
 local bonus_set = nil
 
+local score = nil
 
 function gameLevel:enter(score_obj)
   
@@ -39,10 +36,9 @@ function gameLevel:enter(score_obj)
   ball = Ball(300, 300, 10, 300, 300)
   paddle = Paddle(width - width/2, height - height/10, 70, 20, 320)
   
-  bonus = Bonus(14, 0, 100, 0, 100, "none")
   bonus_set = BonusSet()
   
-  bricks = Bricks(width/18, height/10, width/18, height/16, 10, 15, bonus)
+  bricks = Bricks(width/18, height/10, width/18, height/16, 10, 15)
   bricks:build()
 
   walls = Walls()
@@ -61,7 +57,7 @@ function gameLevel:update(dt)
 
    bonus_set:update(dt)
    
-   collisions:treat(ball, paddle, bricks, walls, bonus)
+   collisions:treat(ball, paddle, bricks, walls, bonus_set)
 
    if score.account > tonumber(score.highscore) then
       score.highscore = score.account

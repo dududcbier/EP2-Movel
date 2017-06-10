@@ -18,12 +18,12 @@ function Collisions:init(ball, paddle, bricks, walls, score)
 end
 
 
-function Collisions:treat(ball, paddle, bricks, walls, bonus)
+function Collisions:treat(ball, paddle, bricks, walls, bonus_set)
    self.ball_paddle(self, ball, paddle)
-   self.ball_bricks(self, ball, bricks, bonus)
+   self.ball_bricks(self, ball, bricks, bonus_set)
    self.ball_walls(self, ball, walls)
    self.paddle_walls(self, paddle, walls)
-   self.bonus_paddle(self, bonus, paddle)
+   self.bonus_paddle(self, bonus_set, paddle, ball)
 end
 
 ----------------
@@ -102,12 +102,12 @@ function Collisions:ball_walls(ball, walls)
    end
 end
 
-function Collisions:ball_bricks(ball, bricks, bonus)
+function Collisions:ball_bricks(ball, bricks, bonus_set)
 
    local overlap, horizontal_shift, vertical_shift
    local b = ball:get_info(ball)
-   
-   for i, brick in pairs( bricks.current_bricks ) do   
+
+   for i, brick in pairs(bricks.current_bricks) do
       local br = brick:get_rect(brick)
       
       overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, br, b)
@@ -119,7 +119,7 @@ function Collisions:ball_bricks(ball, bricks, bonus)
             score:update(1)
          end
 	      ball:turn_back(horizontal_shift, vertical_shift)
-	      bricks:hit_by_ball(i, brick, bonus)
+	      bricks:hit_by_ball(i, brick, bonus_set)
       end
    end
 end
@@ -140,19 +140,22 @@ function Collisions:paddle_walls(paddle, walls)
    end
 end
 
-function Collisions:bonus_paddle(bonus, paddle)
+function Collisions:bonus_paddle(bonus_set, paddle, ball)
    local overlap, horizontal_shift, vertical_shift
-   local b = bonus:get_info(bonus)
    local p = paddle:get_rect(paddle)
 
-   overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, p, b)
+   for i, bonus in pairs(bonus_set.current_bonus) do
+      --local b = bonus:get_info(bonus)
+      local diameter = 2 * bonus.radius
+      local b = { x = bonus.pos_x - bonus.radius, y = bonus.pos_y - bonus.radius, width = diameter, height = diameter }
 
-   if overlap then
-      bonus:apply_effect(self.ball, self.paddle, bonus)
-      bonus:remove(bonus)
+      overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, p, b)
+
+      if overlap then
+         --bonus:apply_effect(ball, paddle, bonus)
+         bonus_set:remove(i)
+      end
    end
-
 end
-
 
 return Collisions

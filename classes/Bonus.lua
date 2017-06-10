@@ -18,8 +18,9 @@ function Bonus:init(radius, pos_x, pos_y, speed_x, speed_y, bonustype)
    self.bonustype = bonustype
 end
 
-function Bonus:new_bonus(pos_x, pos_y, bonustype)
-   return( { pos_x = pos_x, pos_y = pos_y, bonustype = bonustype} )
+function Bonus:new_bonus(radius, pos_x, pos_y, speed_x, speed_y, bonustype)
+   return( { radius = radius, pos_x = pos_x, pos_y = pos_y, 
+             speed_x = speed_x, speed_y = speed_y, bonustype = bonustype} )
 end
 
 function Bonus:update_bonus(bonus, dt)
@@ -33,6 +34,7 @@ function Bonus:draw_bonus(bonus)
 end
 
 function Bonus:get_info(bonus)
+   print("On get info")
    local diameter = 2 * bonus.radius
    return { x = bonus.pos_x - bonus.radius, y = bonus.pos_y - bonus.radius, width = diameter, height = diameter }
 end

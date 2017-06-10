@@ -19,7 +19,7 @@ local Bricks = Class{
 level = Level(1)
 rgb = { "red", "green", "blue" }
 
-function Bricks:init(x, y, width, height, dist_x, dist_y, bonus)
+function Bricks:init(x, y, width, height, dist_x, dist_y)
 
    self.rows = level.number
    self.columns = ((screen_width - 100) / 60) --Brick width + dist_x = 60, pos_x to left and to the right = 50+50 = 100
@@ -31,7 +31,6 @@ function Bricks:init(x, y, width, height, dist_x, dist_y, bonus)
    self.dist_x = dist_x --horizontal distance between bricks
    self.dist_y = dist_y --vertical distance between bricks
    self.current_bricks = {}
-   self.bonus = bonus
 end
 
 function Bricks:build()
@@ -48,7 +47,7 @@ function Bricks:build()
    end
 end
 
-function Bricks:hit_by_ball(i, brick, bonus)
+function Bricks:hit_by_ball(i, brick, bonus_set)
 
    if brick.btype == 1 then
       table.remove(self.current_bricks, i)
@@ -57,7 +56,7 @@ function Bricks:hit_by_ball(i, brick, bonus)
       --{"increase_size_paddle", "reduce_size_paddle", "more_balls", "increase_speed_ball", "reduce_speed_ball"}
       bonustype = math.random(1, 5)
 
-      BonusSet:generate_bonus(bonus.pos_x, bonus.pos_y, bonustype)
+      bonus_set:generate_bonus(15, brick.pos_x, brick.pos_y, 0, 150, bonustype)
 
    elseif brick.btype == 2 then
       Brick:medium_to_cracked(brick)

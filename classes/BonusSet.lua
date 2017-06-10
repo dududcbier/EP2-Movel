@@ -38,28 +38,30 @@ function BonusSet:add(bonus)
    table.insert(self.current_bonus, bonus)
 end
 
-function BonusSet:remove(bonus)
-   table.remove(self.current_bonus, bonus)
+function BonusSet:remove(i)
+   --table.remove(self.current_bonus, bonus)
+   self.current_bonus[i] = nil
 end
 
 
 function BonusSet:clear_current_level_bonus()
    for i in pairs(bonus.current_bonus) do
-      bonus.current_bonus[i] = nil
+      self.current_bonus[i] = nil
    end
 end
 
-function Bonus:generate_bonus(pos_x, pos_y, bonustype)
+function BonusSet:generate_bonus(radius, pos_x, pos_y, speed_x, speed_y, bonustype)
    power = possible_power[bonustype]
    if self.valid_bonustype(self, power) then
-      info_bonus = Bonus:new_bonus(pos_x, pos_y, power)
+
+      info_bonus = Bonus:new_bonus(radius, pos_x, pos_y, speed_x, speed_y, power)
       print("info_bonus")
-      print(info_bonus.pos_x, info_bonus.pos_y, info_bonus.bonustype)
+      print(info_bonus.bonustype)
       self.add(self, info_bonus)
    end
 end
 
-function Bonus:valid_bonustype(bonustype)
+function BonusSet:valid_bonustype(bonustype)
    if bonustype then
       for _, item in ipairs(possible_power) do
          if item == bonustype then
