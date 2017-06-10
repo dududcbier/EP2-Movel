@@ -5,10 +5,11 @@
 -- Import our libraries.
 Gamestate = require 'libs.hump.gamestate'
 Class = require 'libs.hump.class'
+Score = require 'classes.Score'
 
-local menu = Gamestate.new()
+local Menu = {}
 
-function menu:draw()
+function Menu:draw()
   local width, height = love.graphics.getWidth(), love.graphics.getHeight()
 
   love.graphics.setColor(0,0,0, 100)
@@ -17,12 +18,44 @@ function menu:draw()
   love.graphics.printf('Press Enter to continue or Esc to quit', 0, height/2, width, 'center')
 end
 
-function menu:keyreleased(key, code)
-    
-   if key == 'return' then
-      Gamestate.switch(game)
-   end
-
+function Menu:keyreleased(key, code) 
+  if key == 'return' then
+    highscore = {}
+    score = Score(20, 20, 0)
+    if not love.filesystem.exists("highscore.lua") then
+      love.filesystem.newFile("highscore.lua")
+      love.filesystem.write("highscore.lua", "Highscore\n=\n" .. score.highscore)
+    end
+    for line in love.filesystem.lines("highscore.lua") do
+      table.insert(highscore, line)
+    end
+    score.highscore = highscore[3]
+    love.filesystem.write("highscore.lua", "highscore\n=\n" .. score.highscore)
+    Gamestate.switch(Game, score, 1)
+  end
 end
 
-return menu
+function Menu:mousepressed(x, y)
+  self:clicked(x, y)
+end
+
+function Menu:touchpressed(id, x, y, dx, dy, pressure)
+  self:clicked(x, y)
+end
+
+function Menu:clicked(x, y)
+  highscore = {}
+  score = Score(20, 20, 0)
+  if not love.filesystem.exists("highscore.lua") then
+    love.filesystem.newFile("highscore.lua")
+    love.filesystem.write("highscore.lua", "Highscore\n=\n" .. score.highscore)
+  end
+  for line in love.filesystem.lines("highscore.lua") do
+    table.insert(highscore, line)
+  end
+  score.highscore = highscore[3]
+  love.filesystem.write("highscore.lua", "highscore\n=\n" .. score.highscore)
+  Gamestate.switch(Game, score, 1)
+end
+
+return Menu

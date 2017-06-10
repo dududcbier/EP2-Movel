@@ -4,17 +4,14 @@
 
 local Class = require 'libs.hump.class'
 local Brick = require 'classes.Brick'
-local Level = require 'classes.Level'
 
 local screen_width = love.graphics.getWidth()
 local screen_height = love.graphics.getHeight()
 
 local Bricks = Class{
    __includes = Brick,
-   __includes = Level
 }
 
-level = Level(1)
 rgb = { -- http://paletton.com/#uid=7390u0ksRLGeIXqlSS7CRuOyiiE minus the darker colors
    {21, 213, 160, 255}, 
    {133, 245, 214, 255}, 
@@ -34,12 +31,14 @@ rgb = { -- http://paletton.com/#uid=7390u0ksRLGeIXqlSS7CRuOyiiE minus the darker
    {255, 108, 25, 255}, 
    {255, 180, 138, 255}, 
    {255, 144, 81, 255}, 
-   {245, 89,  0, 255}, 
+   {245, 89,  0, 255},
+
+   {200, 200, 200, 255} 
 }
 
-function Bricks:init(x, y, width, height, dist_x, dist_y)
+function Bricks:init(x, y, width, height, dist_x, dist_y, difficulty)
 
-   self.rows = 3 + level.number
+   self.rows = math.min(2 + difficulty, 8)
    self.columns = ((screen_width - 40) / (width + dist_x))
    self.total = self.rows * self.columns
    self.top_left_pos_x = x
@@ -51,7 +50,7 @@ function Bricks:init(x, y, width, height, dist_x, dist_y)
    self.current_bricks = {}
 end
 
-function Bricks:build()
+function Bricks:build(difficulty)
    for i = 1, self.rows do
       for j = 1, self.columns do
 	      local horizontal_pos = self.top_left_pos_x + (j - 1) * (self.width + self.dist_x)
@@ -63,6 +62,27 @@ function Bricks:build()
 		   table.insert(self.current_bricks, brick)
       end      
    end
+   if (difficulty > 1) then 
+      local side = {"right", "left", "both"}
+      self:putUnbreakableBrick(side[math.random(1, 3)])
+   end
+end
+
+function Bricks:putUnbreakableBrick(side)
+   local vertical_pos = self.top_left_pos_y + self.rows * (self.height + self.dist_y)
+   local color = 17
+   local btype = -1
+   local horizontal_pos
+   if (side == "right" or side == "both") then
+      horizontal_pos = self.top_left_pos_x + (self.columns - 1) * (self.width + self.dist_x) + self.dist_x
+      local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
+      table.insert(self.current_bricks, brick)
+   end
+   if (side == "left" or side == "both") then
+      horizontal_pos = self.top_left_pos_x - self.width - self.dist_x
+      local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
+      table.insert(self.current_bricks, brick)
+   end
 end
 
 function Bricks:hit(i)
@@ -70,12 +90,6 @@ function Bricks:hit(i)
    brick:hit()
    if brick:isDestroyed() then
       table.remove(self.current_bricks, i)
-   end
-end
-
-function Bricks:update(dt)
-   for _, brick in pairs(self.current_bricks) do
-      brick:update()
    end
 end
 

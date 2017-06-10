@@ -38,7 +38,8 @@ function Paddle:update(delta_t)
 end
 
 function Paddle:draw()
-   love.graphics.rectangle('fill', self.pos_x, self.pos_y, self.width, self.height)
+  love.graphics.setColor(200, 200, 200) --light gray
+  love.graphics.rectangle('fill', self.pos_x, self.pos_y, self.width, self.height)
 end
 
 function Paddle:mousepressed(x)
