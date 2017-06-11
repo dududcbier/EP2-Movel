@@ -17,9 +17,6 @@ function Walls:init()
    self.current_walls = {}
 end
 
--- function walls:update_wall(wall)
--- end
-
 function Walls:build()
    local left_wall = Wall(0, 0, self.thickness, love.graphics.getHeight())
    
@@ -33,17 +30,11 @@ function Walls:build()
     self.current_walls["top"] = top_wall
 end
 
--- function walls:update(delta_t)
---    for _, wall in pairs(walls.current_walls) do
---       walls.update_wall(wall)
---    end
--- end
-
 function Walls:draw()
-   
-   for _, wall in pairs(self.current_walls) do
-      Wall:draw_wall(wall)
-   end
+  love.graphics.setColor(0, 0, 0) --black 
+  for _, wall in pairs(self.current_walls) do
+    Wall:draw_wall(wall)
+  end
 end
 
 return Walls

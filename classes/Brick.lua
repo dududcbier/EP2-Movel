@@ -16,35 +16,23 @@ function Brick:init(x, y, width, height, btype, color)
    self.height = height
    self.btype = btype
    self.color = color
+   self.image = love.graphics.newImage("img/brick.png")
    self.tileset_width = 384
    self.tileset_height = 160
+   self.original_btype = btype
 end
 
 function Brick:get_rect(brick)
    return { x = brick.pos_x, y = brick.pos_y, width = brick.width, height = brick.height }
 end
 
-function Brick:update(b)
-  --  bricks.total = #bricks.current_bricks
-   
-  --  if bricks.total == 0 then
-  --    levels.number = levels.number + 1
-  --    bricks.construct()
-  --    ball.set_position(300, 300)
-  -- end
-end
-
 function Brick:draw()
-
     love.graphics.setColor(self.color)
-
     if (self.btype == 1) then
       love.graphics.rectangle("line", self.pos_x, self.pos_y, self.width, self.height)
-    elseif (self.btype == 2) then
+    else
       love.graphics.rectangle("fill", self.pos_x, self.pos_y, self.width, self.height)
     end
-
-   love.graphics.setColor(0, 0, 255)
 end
 
 function Brick:hit()
@@ -53,10 +41,6 @@ end
 
 function Brick:isDestroyed()
   return self.btype == 0
-end
-
-function Brick:medium_to_cracked(brick)
-   brick.btype = 1
 end
 
 return Brick

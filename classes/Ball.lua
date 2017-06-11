@@ -73,8 +73,9 @@ function Ball:update(delta_t)
 end
 
 function Ball:draw()
-   local segments_in_circle = 8
-   love.graphics.circle('fill', self.pos_x, self.pos_y, self.radius, segments_in_circle)   
+   love.graphics.setColor(255, 255, 255) --light gray   
+   love.graphics.circle('fill', self.pos_x, self.pos_y, self.radius, 64) 
+   love.graphics.circle('line', self.pos_x, self.pos_y, self.radius, 64)     
 end
 
 function Ball:launch(speed_x, speed_y)
@@ -88,6 +89,18 @@ end
 
 function Ball:getY()
    return self.pos_y
+end
+
+function Ball:speed_up(percent)
+   local value = 1 + percent
+   self.speed_x = self.speed_x * value
+   self.speed_y = self.speed_y * value
+end
+
+function Ball:slow_down(percent)
+   local value = 1 - percent
+   self.speed_x = self.speed_x * value
+   self.speed_y = self.speed_y * value
 end
 
 return Ball

@@ -22,7 +22,6 @@ function Collisions:treat(ball, paddle, bricks, walls, score, bonus_set, level)
    self.ball_paddle(self, ball, paddle)
    self.ball_bricks(self, ball, bricks, bonus_set)
    self.ball_walls(self, ball, walls)
-   self.paddle_walls(self, paddle, walls)
    self.bonus_paddle(self, bonus_set, paddle, ball, score, level)
 end
 
@@ -114,28 +113,12 @@ function Collisions:ball_bricks(ball, bricks, bonus_set)
       
       if overlap then
          if brick.btype == 2 then
-            score:update(5)
-         else
-            score:update(1)
+            score:update(brick.original_btype)
+         elseif brick.btype == 1 then
+            score:update(brick.original_btype)
          end
 	      ball:turn_back(horizontal_shift, vertical_shift)
-	      bricks:hit_by_ball(i, brick, bonus_set)
-      end
-   end
-end
-
-function Collisions:paddle_walls(paddle, walls)
-
-   local overlap, horizontal_shift, vertical_shift
-   local p = paddle:get_rect(paddle)
-   
-   for _, wall in pairs(walls.current_walls) do
-      
-      local w = wall:get_rect(wall) 
-      overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, w, p)
-      
-      if overlap then
-	      paddle:hit_wall(horizontal_shift)
+	      bricks:hit(i, bonus_set)
       end
    end
 end

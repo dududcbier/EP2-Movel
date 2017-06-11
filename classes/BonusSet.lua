@@ -13,8 +13,8 @@ local BonusSet = Class{
 }
 
 
-possible_power = {"increase_size_paddle", "reduce_size_paddle", 
-                  "increase_speed_ball", "reduce_speed_ball", "more_points", "more_lives"}
+possible_power = {"extend_paddle", "shrink_paddle", "speed_ball_up", 
+                  "slow_ball_down", "bonus_points", "extra_lives"}
 
 function BonusSet:init()
    self.current_bonus = {}
@@ -29,7 +29,7 @@ end
 
 function BonusSet:draw()
    for _, bonus in pairs(self.current_bonus) do
-      Bonus:draw_bonus(bonus)
+      bonus:draw_bonus()
    end
 end
 
@@ -53,10 +53,6 @@ function BonusSet:generate_bonus(radius, pos_x, pos_y, speed_x, speed_y, bonusty
    if self.valid_bonustype(self, power) then
 
       bonus = Bonus(radius, pos_x, pos_y, speed_x, speed_y, power)
-
-      if power == "reduce_size_paddle" or power == "increase_speed_ball" then
-         bonus.is_power_up = false
-      end
 
       print(bonus.bonustype)
       self.add(self, bonus)

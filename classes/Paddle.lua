@@ -48,7 +48,8 @@ function Paddle:update(delta_t)
 end
 
 function Paddle:draw()
-   love.graphics.rectangle('fill', self.pos_x, self.pos_y, self.width, self.height)
+  love.graphics.setColor(200, 200, 200) --light gray
+  love.graphics.rectangle('fill', self.pos_x, self.pos_y, self.width, self.height)
 end
 
 function Paddle:mousepressed(x)
@@ -63,6 +64,16 @@ function Paddle:move(x)
   else
     self.pos_x = x - self.width / 2
   end
+end
+
+function Paddle:extend(percentage)
+   local value = 1 + percentage
+   self.width = self.width * value
+end
+
+function Paddle:shrink(percentage)
+   local value = 1 - percentage
+   self.width = self.width * value
 end
 
 return Paddle
