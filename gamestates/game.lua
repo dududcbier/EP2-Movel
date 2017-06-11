@@ -35,13 +35,13 @@ local DEFAULT_BALL_RADIUS = 10
 
 function Game:enter(from, score_obj, difficulty)
 
-  level = Level(0, 1)
+  level = Level(0, difficulty)
 
   ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
   paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
   
-  bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8, 1)
-  bricks:build(1)
+  bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8, difficulty)
+  bricks:build(difficulty)
 
   walls = Walls()
   walls:build()

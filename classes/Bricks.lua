@@ -38,7 +38,13 @@ rgb = { -- http://paletton.com/#uid=7390u0ksRLGeIXqlSS7CRuOyiiE minus the darker
 
 function Bricks:init(x, y, width, height, dist_x, dist_y, difficulty)
 
-   self.rows = math.min(2 + difficulty, 8)
+   if (difficulty <= 5) then
+      self.rows = difficulty + 1
+   elseif (difficulty < 10) then
+      self.rows = difficulty - 3
+   else
+      self.rows = 6
+   end
    self.columns = ((screen_width - 40) / (width + dist_x))
    self.total = self.rows * self.columns
    self.top_left_pos_x = x
@@ -53,23 +59,42 @@ end
 function Bricks:build(difficulty)
    for i = 1, self.rows do
       for j = 1, self.columns do
-	      local horizontal_pos = self.top_left_pos_x + (j - 1) * (self.width + self.dist_x)
-		   local vertical_pos = self.top_left_pos_y + (i - 1) * (self.height + self.dist_y)
+         local spawn = math.random(1, 100)
+         -- Bricks have a (20 - difficulty * 2)% chance of not spawning
+         if (spawn > 20 - difficulty * 2) then spawn = true else spawn = false end
+         if spawn then 
+   	      local horizontal_pos = self.top_left_pos_x + (j - 1) * (self.width + self.dist_x)
+   		   local vertical_pos = self.top_left_pos_y + i * (self.height + self.dist_y)
 
-         local color = math.random(1, 16)
-         local btype = math.random(1, 2)
-		   local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
-		   table.insert(self.current_bricks, brick)
+            local color = math.random(1, 16)
+            local btype = math.random(1, 100)
+            -- Bricks have a 50 + floor(difficulty / 2) * 10% chance of being spawned as a type 2 brick
+            if (btype > math.floor(difficulty / 2) * 10 + 50) then btype = 1 else btype = 2 end
+   		   local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
+   		   table.insert(self.current_bricks, brick)
+         end
       end      
    end
-   if (difficulty > 1) then 
+   if (difficulty > 3 and difficulty < 6) then 
       local side = {"right", "left", "both"}
       self:putUnbreakableBrick(side[math.random(1, 3)])
+   elseif difficulty >= 6 and difficulty < 9 then
+      local position = {"top", "bottom"}
+      self:putUnbreakableBrickRow(position[math.random(1, 2)])
+   elseif difficulty == 9 then
+      local position = {"top", "bottom"}
+      local side = {"right", "left", "both"}
+      self:putUnbreakableBrickRow(position[math.random(1, 2)])
+      self:putUnbreakableBrickColumn(side[math.random(1, 2)])
+   elseif difficulty == 10 then
+      self:putUnbreakableBrickRow("top")
+      self:putUnbreakableBrickColumn("both")
    end
+
 end
 
 function Bricks:putUnbreakableBrick(side)
-   local vertical_pos = self.top_left_pos_y + self.rows * (self.height + self.dist_y)
+   local vertical_pos = self.top_left_pos_y + (self.rows + 1) * (self.height + self.dist_y)
    local color = 17
    local btype = -1
    local horizontal_pos
@@ -82,6 +107,41 @@ function Bricks:putUnbreakableBrick(side)
       horizontal_pos = self.top_left_pos_x - self.width - self.dist_x
       local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
       table.insert(self.current_bricks, brick)
+   end
+end
+
+function Bricks:putUnbreakableBrickRow(position)
+   local vertical_pos
+   if position == "top" then vertical_pos = self.top_left_pos_y
+   elseif position == "bottom" then vertical_pos = self.top_left_pos_y + (self.height + self.dist_y) * (self.rows + 1) end
+   local color = 17
+   local btype = -1
+   for j = 1, self.columns do
+      local horizontal_pos = self.top_left_pos_x + (j - 1) * (self.width + self.dist_x)
+      local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
+      table.insert(self.current_bricks, brick)
+   end
+end
+
+function Bricks:putUnbreakableBrickColumn(side)
+   local color = 17
+   local btype = -1
+   local horizontal_pos
+   if (side == "right" or side == "both") then
+      horizontal_pos = self.top_left_pos_x + (self.columns - 1) * (self.width + self.dist_x) + self.dist_x
+      for i = 1, self.rows do
+         vertical_pos = self.top_left_pos_y + i * (self.height + self.dist_y)
+         local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
+         table.insert(self.current_bricks, brick)
+      end
+   end
+   if (side == "left" or side == "both") then
+      horizontal_pos = self.top_left_pos_x - self.width - self.dist_x
+      for i = 1, self.rows do
+         vertical_pos = self.top_left_pos_y + i * (self.height + self.dist_y)
+         local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
+         table.insert(self.current_bricks, brick)
+      end
    end
 end
 
