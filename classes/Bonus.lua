@@ -49,9 +49,9 @@ end
 function Bonus:apply_effect(ball, paddle, bonus, score, level)
 
    if bonus.bonustype == "increase_size_paddle" then
-      paddle:increase_size_paddle(paddle, 10)
+      paddle:increase_size_paddle(paddle, 0.3)
    elseif bonus.bonustype == "reduce_size_paddle" then
-      paddle:reduce_size_paddle(paddle, 10)
+      paddle:reduce_size_paddle(paddle, 0.3)
    elseif bonus.bonustype == "increase_speed_ball" then
       ball:increase_speed_ball(ball, 0.1)
    elseif bonus.bonustype == "reduce_speed_ball" then

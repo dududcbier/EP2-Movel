@@ -55,14 +55,6 @@ function Brick:isDestroyed()
   return self.btype == 0
 end
 
--- function Brick:check_if_easy(brick)
---    return brick.btype == 1
--- end
-
--- function Brick:check_if_medium(brick)
---    return brick.btype == 2
--- end
-
 function Brick:medium_to_cracked(brick)
    brick.btype = 1
 end

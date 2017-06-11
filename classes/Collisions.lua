@@ -67,7 +67,7 @@ end
 
 
 ------------------------------------------------
---Treats the three possible cases of collisions
+--Treats possible cases of collisions
 ------------------------------------------------
 function Collisions:ball_paddle(ball, paddle)
    local overlap, horizontal_shift, vertical_shift
