@@ -17,7 +17,6 @@ function Bonus:init(radius, pos_x, pos_y, speed_x, speed_y, bonustype)
    self.speed_y = speed_y
    self.bonustype = bonustype
    if self.bonustype == "shrink_paddle" or self.bonustype == "speed_ball_up" then
-      print("DO MALLLL")
       self.is_power_up = false
    else
       self.is_power_up = true

@@ -89,7 +89,7 @@ function Menu:keyreleased(key, code)
     end
     score.highscore = highscore[3]
     love.filesystem.write("highscore.lua", "highscore\n=\n" .. score.highscore)
-    Gamestate.switch(Game, score, self.game_difficulty)
+    Gamestate.switch(Game, score, 1, self.game_difficulty, 5)
   end
 end
 
@@ -115,7 +115,7 @@ function Menu:clicked(x, y)
     end
     score.highscore = highscore[3]
     love.filesystem.write("highscore.lua", "highscore\n=\n" .. score.highscore)
-    Gamestate.switch(Game, score, self.game_difficulty)
+    Gamestate.switch(Game, score, 1, self.game_difficulty, 5)
   end
   if (self.game_difficulty > 1 and pointInTriangle(x, y, pos_x, pos_y, pos_x - width/40, pos_y + button_height / 2, pos_x, pos_y + button_height)) then
     self.game_difficulty = self.game_difficulty - 1

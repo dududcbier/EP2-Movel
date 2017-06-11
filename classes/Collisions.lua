@@ -116,6 +116,7 @@ function Collisions:ball_bricks(ball, bricks, bonus_set)
             score:update(brick.original_btype)
          elseif brick.btype == 1 then
             score:update(brick.original_btype)
+            bricks.total = bricks.total - 1
          end
 	      ball:turn_back(horizontal_shift, vertical_shift)
 	      bricks:hit(i, bonus_set)

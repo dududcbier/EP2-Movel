@@ -1,5 +1,5 @@
 -- Import our libraries.
---Gamestate = require 'libs.hump.gamestate'
+Gamestate = require 'libs.hump.gamestate'
 Class = require 'libs.hump.class'
 
 --Get window width and height
@@ -32,9 +32,14 @@ local launched
 local DEFAULT_PADDLE_WIDTH = 70
 local DEFAULT_BALL_RADIUS = 10
 
-function Game:enter(from, score_obj, difficulty)
+local music = love.audio.newSource("music/background.mp3", "static")
 
-  level = Level(difficulty, 5)
+function Game:enter(from, score_obj, number, difficulty, lives)
+
+  music:stop()
+  music:play()
+
+  level = Level(number, difficulty, lives)
   
   bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8, difficulty)
   bricks:build(difficulty)
@@ -51,9 +56,9 @@ function Game:enter(from, score_obj, difficulty)
 end
 
 function Game:startGame()
-  ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
-  paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
-  launched = false
+   ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
+   paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
+   launched = false
 end
 
 function Game:update(dt)
@@ -71,17 +76,29 @@ function Game:update(dt)
     end
 
     local pos = ball:get_position(ball)
-    if pos.y > height + 10 then
+   if pos.y > height + 10 then
       over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
       over_song:play()
       level:decrease_lives(1)
+      --Game Over
       if (level.lives == 0) then
-        score:reset()
-        Gamestate.switch(Menu)
+         score:reset()
+         music:stop()
+         Gamestate.switch(Menu)
+      --Continue game
       else
-        Game:startGame()
+         Game:startGame()
       end
-    end
+   end
+
+   --Next level
+   if bricks.total == 0 then
+      if (level.difficulty < 10) then
+         level.difficulty = level.difficulty + 1
+      end
+      level.number = level.number + 1
+      Game:enter(Game, score, level.number, level.difficulty, level.lives)
+   end
 end
 
 function Game:mousepressed(x, y)

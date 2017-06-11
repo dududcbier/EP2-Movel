@@ -54,6 +54,7 @@ function Bricks:init(x, y, width, height, dist_x, dist_y, difficulty)
    self.dist_x = dist_x --horizontal distance between bricks
    self.dist_y = dist_y --vertical distance between bricks
    self.current_bricks = {}
+   self.total = 0
 end
 
 function Bricks:build(difficulty)
@@ -72,6 +73,7 @@ function Bricks:build(difficulty)
             if (btype > math.floor(difficulty / 2) * 10 + 50) then btype = 1 else btype = 2 end
    		   local brick = Brick(horizontal_pos, vertical_pos, self.width, self.height, btype, rgb[color])
    		   table.insert(self.current_bricks, brick)
+            self.total = self.total + 1
          end
       end      
    end

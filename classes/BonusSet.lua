@@ -53,8 +53,6 @@ function BonusSet:generate_bonus(radius, pos_x, pos_y, speed_x, speed_y, bonusty
    if self.valid_bonustype(self, power) then
 
       bonus = Bonus(radius, pos_x, pos_y, speed_x, speed_y, power)
-
-      print(bonus.bonustype)
       self.add(self, bonus)
    end
 end

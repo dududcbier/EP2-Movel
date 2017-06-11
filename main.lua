@@ -19,7 +19,7 @@ local height = love.graphics.getHeight()
 
 function love.load()
    math.randomseed(os.time())
-   math.random() -- First random number is always the same in macOS
+   math.random()
    Gamestate.registerEvents()
    Gamestate.switch(Menu)
 end
