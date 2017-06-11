@@ -6,19 +6,30 @@ local Class = require 'libs.hump.class'
 
 local Level = Class{}
 
-function Level:init(number, difficulty)
-   self.number = number
-   self.high_score = 0
-   self.score = 0
+local width = love.graphics.getWidth()
+local height = love.graphics.getHeight()
+
+function Level:init(difficulty, lives)
    self.difficulty = difficulty
+   self.lives = lives
 end
 
-function Level:update_score(points)
-	self.score = self.score + points
-	-- print(self.score)
+function Level:update(dt)
+   love.graphics.setColor(255, 255, 255)
+   love.graphics.printf("Lives: " .. self.lives, width/4, 20, width, 'center')
 end
 
-function Level:draw_score()
+function Level:draw()
+   love.graphics.setColor(255, 255, 255)
+   love.graphics.printf("Lives: " .. self.lives, width/4, 20, width, 'center')
+end
+
+function Level:increase_lives(lives)
+	self.lives = self.lives + lives
+end
+
+function Level:decrease_lives(lives)
+	self.lives = self.lives - lives
 end
 
 return Level

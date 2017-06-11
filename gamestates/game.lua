@@ -15,7 +15,7 @@ local Paddle = require 'classes.Paddle'
 local Bricks = require 'classes.Bricks'
 local Walls = require 'classes.Walls'
 local Collisions = require 'classes.Collisions'
-
+local BonusSet = require 'classes.BonusSet'
 local Level = require 'classes.Level'
 
 -- Important variables
@@ -32,13 +32,9 @@ local launched
 local DEFAULT_PADDLE_WIDTH = 70
 local DEFAULT_BALL_RADIUS = 10
 
-
 function Game:enter(from, score_obj, difficulty)
 
-  level = Level(0, difficulty)
-
-  ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
-  paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
+  level = Level(difficulty, 5)
   
   bricks = Bricks(width/18, height/10, width/18, height/16, 8, 8, difficulty)
   bricks:build(difficulty)
@@ -47,8 +43,16 @@ function Game:enter(from, score_obj, difficulty)
   walls:build()
 
   score = score_obj
+  bonus_set = BonusSet()
+
+  Game:startGame()
 
   collisions = Collisions(ball, paddle, bricks, walls, score)
+end
+
+function Game:startGame()
+  ball = Ball(width - width/2, height - height/10 - DEFAULT_BALL_RADIUS, DEFAULT_BALL_RADIUS, 0, 0)
+  paddle = Paddle(width - width/2 - DEFAULT_PADDLE_WIDTH / 2, height - height/10, DEFAULT_PADDLE_WIDTH, 20, 320)
   launched = false
 end
 
@@ -56,7 +60,9 @@ function Game:update(dt)
     if launched then
       ball:update(dt)
       paddle:update(dt)
-      collisions:treat(ball, paddle, bricks, walls)
+      bonus_set:update(dt)
+      level:update(dt)
+      collisions:treat(ball, paddle, bricks, walls, score, bonus_set, level)
     end
 
     if score.account > tonumber(score.highscore) then
@@ -66,11 +72,15 @@ function Game:update(dt)
 
     local pos = ball:get_position(ball)
     if pos.y > height + 10 then
-      gameOver = true
       over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
       over_song:play()
-      score:reset()
-      Game:enter(Game, score, level.difficulty)
+      level:decrease_lives(1)
+      if (level.lives == 0) then
+        score:reset()
+        Gamestate.switch(Menu)
+      else
+        Game:startGame()
+      end
     end
 end
 
@@ -113,11 +123,11 @@ function Game:draw()
 
   ball:draw()
   paddle:draw()
-
+  level:draw()
   bricks:draw()
   walls:draw()
-
   score:draw()
+  bonus_set:draw()
 
   love.graphics.setColor({200, 200, 200, 255})
   love.graphics.rectangle("fill", width - 20, 0, 20, 20)

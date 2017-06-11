@@ -145,11 +145,18 @@ function Bricks:putUnbreakableBrickColumn(side)
    end
 end
 
-function Bricks:hit(i)
+function Bricks:hit(i, bonus_set)
    local brick = self.current_bricks[i]
    brick:hit()
    if brick:isDestroyed() then
       table.remove(self.current_bricks, i)
+
+      -- The power-ups are:
+      -- 1 - extend_paddle  | 2 - shrink_paddle | 3 - speed_ball_up
+      -- 4 - slow_ball_down | 5 - bonus_points  | 6 - extra_lives
+
+      bonustype = math.random(1, 6)
+      bonus_set:generate_bonus(15, brick.pos_x, brick.pos_y, 0, 150, bonustype)
    end
 end
 

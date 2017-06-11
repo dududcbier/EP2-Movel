@@ -76,4 +76,16 @@ function Ball:getY()
    return self.pos_y
 end
 
+function Ball:speed_up(percent)
+   local value = 1 + percent
+   self.speed_x = self.speed_x * value
+   self.speed_y = self.speed_y * value
+end
+
+function Ball:slow_down(percent)
+   local value = 1 - percent
+   self.speed_x = self.speed_x * value
+   self.speed_y = self.speed_y * value
+end
+
 return Ball

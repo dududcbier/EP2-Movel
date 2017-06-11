@@ -56,5 +56,15 @@ function Paddle:move(x)
   end
 end
 
+function Paddle:extend(percentage)
+   local value = 1 + percentage
+   self.width = self.width * value
+end
+
+function Paddle:shrink(percentage)
+   local value = 1 - percentage
+   self.width = self.width * value
+end
+
 return Paddle
 ------------------------------

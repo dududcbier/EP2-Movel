@@ -18,10 +18,11 @@ function Collisions:init(ball, paddle, bricks, walls, score)
 end
 
 
-function Collisions:treat(ball, paddle, bricks, walls)
+function Collisions:treat(ball, paddle, bricks, walls, score, bonus_set, level)
    self.ball_paddle(self, ball, paddle)
-   self.ball_bricks(self, ball, bricks)
+   self.ball_bricks(self, ball, bricks, bonus_set)
    self.ball_walls(self, ball, walls)
+   self.bonus_paddle(self, bonus_set, paddle, ball, score, level)
 end
 
 ----------------
@@ -100,7 +101,7 @@ function Collisions:ball_walls(ball, walls)
    end
 end
 
-function Collisions:ball_bricks(ball, bricks)
+function Collisions:ball_bricks(ball, bricks, bonus_set)
 
    local overlap, horizontal_shift, vertical_shift
    local b = ball:get_info(ball)
@@ -117,7 +118,23 @@ function Collisions:ball_bricks(ball, bricks)
             score:update(brick.original_btype)
          end
 	      ball:turn_back(horizontal_shift, vertical_shift)
-	      bricks:hit(i)
+	      bricks:hit(i, bonus_set)
+      end
+   end
+end
+
+function Collisions:bonus_paddle(bonus_set, paddle, ball, score, level)
+   local overlap, horizontal_shift, vertical_shift
+   local p = paddle:get_rect(paddle)
+
+   for i, bonus in pairs(bonus_set.current_bonus) do
+      local b = bonus:get_info(bonus)
+
+      overlap, horizontal_shift, vertical_shift = self.check_rectangles_overlap(self, p, b)
+
+      if overlap then
+         bonus:apply_effect(ball, paddle, bonus, score, level)
+         bonus_set:remove(i)
       end
    end
 end
