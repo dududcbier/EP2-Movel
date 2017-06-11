@@ -112,9 +112,9 @@ function Collisions:ball_bricks(ball, bricks)
       
       if overlap then
          if brick.btype == 2 then
-            score:update(5)
-         else
-            score:update(1)
+            score:update(brick.original_btype)
+         elseif brick.btype == 1 then
+            score:update(brick.original_btype)
          end
 	      ball:turn_back(horizontal_shift, vertical_shift)
 	      bricks:hit(i)

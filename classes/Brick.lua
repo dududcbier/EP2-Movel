@@ -19,6 +19,7 @@ function Brick:init(x, y, width, height, btype, color)
    self.image = love.graphics.newImage("img/brick.png")
    self.tileset_width = 384
    self.tileset_height = 160
+   self.original_btype = btype
 end
 
 function Brick:get_rect(brick)
