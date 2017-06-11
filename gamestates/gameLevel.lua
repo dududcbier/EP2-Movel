@@ -66,8 +66,8 @@ function gameLevel:update(dt)
       paddle:update(dt)
       bricks:update(dt)
       bonus_set:update(dt)
-      collisions:treat(ball, paddle, bricks, walls, bonus_set)
       level:update_lives(dt)
+      collisions:treat(ball, paddle, bricks, walls, score, bonus_set, level)
     end
 
     if score.account > tonumber(score.highscore) then
@@ -79,7 +79,7 @@ function gameLevel:update(dt)
     if pos.y > height + 10 then
       local enter_first_time = false
       level:decrease_lives(1)
-      print("Lives: " .. level.lives)
+
       if level.lives == 0 then
          self.gameOver = true
          over_song = love.audio.newSource("music/bomb_falling_exploding.wav", "static")
@@ -113,7 +113,6 @@ function gameLevel:draw()
   
    love.graphics.setColor(255, 255, 255)
    love.graphics.setBackgroundColor(22, 22, 22)
-   -- love.graphics.draw(img, 0, 0)
 
    ball:draw()
    love.graphics.setColor(200, 200, 200) --light gray
@@ -126,7 +125,6 @@ function gameLevel:draw()
    score:draw()
    level:draw_lives()
 
-   --love.graphics.setColor(139,0,0) Put the correct color according with bonustype
    bonus_set:draw()
 
 
