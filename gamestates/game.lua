@@ -62,6 +62,7 @@ function Game:startGame()
 end
 
 function Game:update(dt)
+    dt = math.min(dt, 0.016)
     if launched then
       ball:update(dt)
       paddle:update(dt)

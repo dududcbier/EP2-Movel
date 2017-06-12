@@ -99,6 +99,7 @@ function Collisions:ball_walls(ball, walls)
          src2:play()
       end
    end
+
 end
 
 function Collisions:ball_bricks(ball, bricks, bonus_set)
